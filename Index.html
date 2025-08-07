@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>โปรแกรมรายรับ-รายจ่าย</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;700&display=swap');
+        
+        :root {
+            --primary-color: #0056b3;
+            --accent-color: #007bff;
+            --income-color: #2e7d32;
+            --expense-color: #c62828;
+            --background-color: #f0f2f5;
+            --card-bg-color: #ffffff;
+            --text-color: #333333;
+            --sub-text-color: #666666;
+            --border-color: #e0e0e0;
+        }
+        
+        body {
+            font-family: 'Kanit', sans-serif;
+            background-color: var(--background-color);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .app-container {
+            width: 100%;
+            max-width: 420px;
+            height: 100vh;
+            background-color: var(--card-bg-color);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .header {
+            text-align: center;
+            padding: 20px 0;
+            background-color: var(--primary-color);
+            color: white;
+            font-size: 24px;
+            font-weight: 500;
+        }
+        
+        .screen {
+            flex-grow: 1;
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        /* --- หน้าหลัก --- */
+        .home-screen {
+            /* display: flex; */ /* จะถูกสลับการแสดงผลด้วย JS */
+        }
+
+        .balance-card {
+            background-color: #e8f5e9;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+        
+        .balance-card h2 {
+            font-size: 16px;
+            color: var(--sub-text-color);
+            margin-top: 0;
+            margin-bottom: 5px;
+        }
+        
+        .balance-card .balance-amount {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--income-color);
+        }
+        
+        .input-section h3 {
+            text-align: center;
+            color: var(--text-color);
+            margin-bottom: 15px;
+            font-size: 20px;
+            font-weight: 500;
+        }
+        
+        #entry-form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        #entry-form input {
+            padding: 12px 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 16px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        
+        #entry-form input:focus {
+            outline: none;
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.2);
+        }
+        
+        .button-group {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .button {
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            border: none;
+            flex-grow: 1;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+        
+        #record-button {
+            background-color: var(--accent-color);
+            color: white;
+        }
+        
+        #record-button:hover {
+            background-color: #0056b3;
+        }
+        
+        #view-history-button {
+            background-color: transparent;
+            color: var(--accent-color);
+            border: 1px solid var(--accent-color);
+            flex-grow: 1;
+        }
+        
+        #view-history-button:hover {
+            background-color: var(--accent-color);
+            color: white;
+        }
+
+        /* --- หน้ารายการย้อนหลัง --- */
+        .history-screen {
+            /* display: none; */ /* จะถูกสลับการแสดงผลด้วย JS */
+            padding-bottom: 80px; /* เพื่อให้มีที่ว่างสำหรับปุ่มกลับ */
+        }
+        
+        .transaction-list h3 {
+            margin: 0;
+            margin-bottom: 15px;
+            color: var(--text-color);
+            font-size: 20px;
+            font-weight: 500;
+        }
+        
+        #transaction-list-ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .transaction-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            background-color: var(--card-bg-color);
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        }
+        
+        .transaction-details {
+            flex-grow: 1;
+        }
+        
+        .transaction-details .description {
+            font-weight: 500;
+            color: var(--text-color);
+        }
+        
+        .transaction-details .date {
+            font-size: 12px;
+            color: var(--sub-text-color);
+        }
+        
+        .transaction-item .amount {
+            font-size: 18px;
+            font-weight: 700;
+        }
+        
+        .transaction-item.income .amount {
+            color: var(--income-color);
+        }
+        
+        .transaction-item.expense .amount {
+            color: var(--expense-color);
+        }
+        
+        .navigation-bar {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            display: flex;
+            padding: 15px 20px;
+            box-sizing: border-box;
+            background-color: var(--card-bg-color);
+            border-top: 1px solid var(--border-color);
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
+        }
+        
+        .navigation-bar button {
+            width: 100%;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            border: none;
+            background-color: var(--primary-color);
+            color: white;
+            transition: background-color 0.3s ease;
+        }
+        
+        .navigation-bar button:hover {
+            background-color: #004085;
+        }
+        
+        /* Utility Classes */
+        .hidden {
+            display: none !important;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+        
+        <div class="header" id="app-header">
+            โปรแกรมรายรับ-รายจ่าย
+        </div>
+
+        <div class="screen home-screen" id="home-screen">
+            <div class="balance-card">
+                <h2>ยอดคงเหลือปัจจุบัน</h2>
+                <div class="balance-amount" id="current-balance">0.00 บาท</div>
+            </div>
+            
+            <div class="input-section">
+                <h3>บันทึกรายการ</h3>
+                <form id="entry-form">
+                    <input type="text" id="description" placeholder="รายการ (ถ้ามี)">
+                    <div class="button-group">
+                        <input type="number" id="income-amount" placeholder="เงินรับ">
+                        <input type="number" id="expense-amount" placeholder="เงินจ่าย">
+                    </div>
+                    <button type="submit" id="record-button">บันทึก</button>
+                </form>
+            </div>
+            
+            <button class="button" id="view-history-button">ดูรายการย้อนหลัง</button>
+        </div>
+        
+        <div class="screen history-screen hidden" id="history-screen">
+            <div class="transaction-list">
+                <h3>รายการทั้งหมด</h3>
+                <ul id="transaction-list-ul">
+                    </ul>
+            </div>
+        </div>
+
+        <div class="navigation-bar hidden" id="navigation-bar">
+            <button id="back-to-home-button">กลับไปหน้าหลัก</button>
+        </div>
+    </div>
+
+    <script>
+        const appContainer = document.querySelector('.app-container');
+        const homeScreen = document.getElementById('home-screen');
+        const historyScreen = document.getElementById('history-screen');
+        const navigationBar = document.getElementById('navigation-bar');
+        const appHeader = document.getElementById('app-header');
+
+        const form = document.getElementById('entry-form');
+        const descriptionInput = document.getElementById('description');
+        const incomeAmountInput = document.getElementById('income-amount');
+        const expenseAmountInput = document.getElementById('expense-amount');
+        const currentBalanceSpan = document.getElementById('current-balance');
+        const transactionListUl = document.getElementById('transaction-list-ul');
+        const viewHistoryButton = document.getElementById('view-history-button');
+        const backToHomeButton = document.getElementById('back-to-home-button');
+
+        let transactions = JSON.parse(localStorage.getItem('transactions')) || [];
+
+        function navigateTo(screenName) {
+            homeScreen.classList.add('hidden');
+            historyScreen.classList.add('hidden');
+            navigationBar.classList.add('hidden');
+            appHeader.textContent = 'โปรแกรมรายรับ-รายจ่าย';
+
+            if (screenName === 'home') {
+                homeScreen.classList.remove('hidden');
+            } else if (screenName === 'history') {
+                historyScreen.classList.remove('hidden');
+                navigationBar.classList.remove('hidden');
+                appHeader.textContent = 'รายการย้อนหลัง';
+                renderTransactions();
+            }
+        }
+
+        function updateBalance() {
+            const balance = transactions.reduce((acc, item) => acc + item.amount, 0);
+            const balanceAmountDiv = document.querySelector('.balance-amount');
+            balanceAmountDiv.textContent = balance.toFixed(2) + ' บาท';
+            
+            if (balance < 0) {
+                balanceAmountDiv.style.color = 'var(--expense-color)';
+            } else {
+                balanceAmountDiv.style.color = 'var(--income-color)';
+            }
+        }
+
+        function renderTransactions() {
+            transactionListUl.innerHTML = '';
+            if (transactions.length === 0) {
+                transactionListUl.innerHTML = '<li style="text-align:center; color:var(--sub-text-color);">ยังไม่มีรายการ</li>';
+                return;
+            }
+
+            transactions.forEach(item => {
+                const li = document.createElement('li');
+                const type = item.amount >= 0 ? 'income' : 'expense';
+                li.classList.add('transaction-item', type);
+                
+                const formattedDate = new Date(item.date).toLocaleDateString('th-TH', {
+                    day: 'numeric',
+                    month: 'short',
+                    year: 'numeric'
+                });
+
+                const amountText = (item.amount >= 0 ? '+' : '') + item.amount.toFixed(2);
+                const descriptionText = item.description || (item.amount >= 0 ? 'รับ' : 'จ่าย');
+                
+                li.innerHTML = `
+                    <div class="transaction-details">
+                        <div class="description">${descriptionText}</div>
+                        <div class="date">${formattedDate}</div>
+                    </div>
+                    <div class="amount">${amountText} บาท</div>
+                `;
+                transactionListUl.appendChild(li);
+            });
+        }
+
+        function addTransaction(e) {
+            e.preventDefault();
+
+            const incomeAmount = parseFloat(incomeAmountInput.value);
+            const expenseAmount = parseFloat(expenseAmountInput.value);
+            let amount = 0;
+
+            if (incomeAmount > 0) {
+                amount = incomeAmount;
+            } else if (expenseAmount > 0) {
+                amount = -expenseAmount;
+            } else {
+                alert('กรุณากรอกจำนวนเงินรับหรือจ่าย');
+                return;
+            }
+
+            const newTransaction = {
+                id: Math.random(),
+                description: descriptionInput.value,
+                amount: amount,
+                date: new Date().toISOString()
+            };
+
+            transactions.unshift(newTransaction);
+            localStorage.setItem('transactions', JSON.stringify(transactions));
+            
+            updateBalance();
+
+            // Clear form
+            descriptionInput.value = '';
+            incomeAmountInput.value = '';
+            expenseAmountInput.value = '';
+
+            // แสดงรายการล่าสุด (optional, ถ้าต้องการ)
+            // renderTransactions();
+        }
+
+        form.addEventListener('submit', addTransaction);
+        viewHistoryButton.addEventListener('click', () => navigateTo('history'));
+        backToHomeButton.addEventListener('click', () => navigateTo('home'));
+        
+        // Initial load
+        navigateTo('home');
+        updateBalance();
+    </script>
+
+</body>
+</html>
