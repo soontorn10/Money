@@ -60,9 +60,8 @@
             gap: 20px;
         }
 
-        /* --- หน้าหลัก --- */
         .home-screen {
-            /* display: flex; */ /* จะถูกสลับการแสดงผลด้วย JS */
+            /* display: flex; */
         }
 
         .balance-card {
@@ -152,10 +151,9 @@
             color: white;
         }
 
-        /* --- หน้ารายการย้อนหลัง --- */
         .history-screen {
-            /* display: none; */ /* จะถูกสลับการแสดงผลด้วย JS */
-            padding-bottom: 80px; /* เพื่อให้มีที่ว่างสำหรับปุ่มกลับ */
+            /* display: none; */
+            padding-bottom: 80px;
         }
         
         .transaction-list h3 {
@@ -242,7 +240,6 @@
             background-color: #004085;
         }
         
-        /* Utility Classes */
         .hidden {
             display: none !important;
         }
@@ -316,6 +313,7 @@
 
             if (screenName === 'home') {
                 homeScreen.classList.remove('hidden');
+                updateBalance();
             } else if (screenName === 'history') {
                 historyScreen.classList.remove('hidden');
                 navigationBar.classList.remove('hidden');
@@ -396,23 +394,19 @@
             
             updateBalance();
 
-            // Clear form
             descriptionInput.value = '';
             incomeAmountInput.value = '';
             expenseAmountInput.value = '';
-
-            // แสดงรายการล่าสุด (optional, ถ้าต้องการ)
-            // renderTransactions();
         }
 
         form.addEventListener('submit', addTransaction);
         viewHistoryButton.addEventListener('click', () => navigateTo('history'));
         backToHomeButton.addEventListener('click', () => navigateTo('home'));
         
-        // Initial load
         navigateTo('home');
         updateBalance();
     </script>
 
 </body>
 </html>
+
