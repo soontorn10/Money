@@ -55,13 +55,13 @@
             flex-grow: 1;
             padding: 20px;
             overflow-y: auto;
-            display: none; /* All screens are hidden by default */
+            display: none;
             flex-direction: column;
             gap: 20px;
         }
         
         .screen.active {
-            display: flex; /* Active screen is visible */
+            display: flex;
         }
         
         .login-screen, .signup-screen, .admin-screen {
@@ -216,13 +216,13 @@
             gap: 10px;
         }
         
-        #view-history-button {
+        #view-history-button, #logout-button {
             background-color: transparent;
             color: var(--accent-color);
             border: 1px solid var(--accent-color);
         }
         
-        #view-history-button:hover {
+        #view-history-button:hover, #logout-button:hover {
             background-color: var(--accent-color);
             color: white;
         }
@@ -300,51 +300,19 @@
             cursor: pointer;
         }
         
-        .navigation-bar {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            display: none;
-            padding: 15px 20px;
-            box-sizing: border-box;
-            background-color: var(--card-bg-color);
-            border-top: 1px solid var(--border-color);
-            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
+        /* New styles for the footer buttons */
+        .history-footer {
+            margin-top: auto;
+            padding-top: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
         }
         
-        .navigation-bar.active {
-            display: flex;
+        .history-footer .button {
+            width: 100%;
         }
 
-        .nav-button {
-            width: 100%;
-            padding: 12px;
-            border-radius: 8px;
-            font-size: 16px;
-            font-weight: 500;
-            cursor: pointer;
-            border: none;
-            background-color: var(--primary-color);
-            color: white;
-            transition: background-color 0.3s ease;
-        }
-        
-        .nav-button:hover {
-            background-color: #004085;
-        }
-        
-        #download-button {
-            background-color: #f0f0f0;
-            color: var(--text-color);
-            border: 1px solid var(--border-color);
-            margin-top: 10px;
-        }
-        
-        #download-button:hover {
-            background-color: #e0e0e0;
-        }
-        
         .edit-form-container {
             position: fixed;
             top: 0;
@@ -388,6 +356,7 @@
             justify-content: flex-end;
             margin-top: 10px;
         }
+
     </style>
 </head>
 <body>
@@ -458,7 +427,10 @@
                 <ul id="transaction-list-ul">
                     </ul>
             </div>
-            <button class="button" id="download-button">ดาวน์โหลดเป็น CSV</button>
+            <div class="history-footer">
+                <button class="button" id="download-button">ดาวน์โหลดเป็น CSV</button>
+                <button class="button" id="back-to-home-button">กลับไปหน้าหลัก</button>
+            </div>
         </div>
         
         <div class="screen admin-screen" id="admin-screen">
@@ -467,10 +439,6 @@
                 <ul id="admin-user-list">
                     </ul>
             </div>
-        </div>
-
-        <div class="navigation-bar" id="navigation-bar">
-            <button class="nav-button" id="back-to-home-button">กลับไปหน้าหลัก</button>
         </div>
 
         <div class="edit-form-container" id="edit-form-modal">
@@ -497,7 +465,6 @@
         const homeScreen = document.getElementById('home-screen');
         const historyScreen = document.getElementById('history-screen');
         const adminScreen = document.getElementById('admin-screen');
-        const navigationBar = document.getElementById('navigation-bar');
         const appHeader = document.getElementById('app-header');
 
         const loginForm = document.getElementById('login-form');
@@ -554,16 +521,13 @@
             screens.forEach(screen => screen.classList.remove('active'));
             document.getElementById(screenId).classList.add('active');
             appHeader.textContent = headerText;
-            navigationBar.classList.remove('active');
 
             if (screenId === 'home-screen') {
                 loadTransactions();
                 updateBalance();
             } else if (screenId === 'history-screen') {
-                navigationBar.classList.add('active');
                 renderTransactions();
             } else if (screenId === 'admin-screen') {
-                navigationBar.classList.add('active');
                 renderAdminList();
             }
         }
@@ -648,7 +612,6 @@
             const username = loginUsernameInput.value.trim();
             const pin = loginPinInput.value.trim();
 
-            // Check for Admin access
             if (username.toLowerCase() === 'admin' && pin === ADMIN_PIN) {
                 navigateTo('admin-screen', 'หน้าผู้ดูแล');
                 loginUsernameInput.value = '';
@@ -705,7 +668,6 @@
         toSignupLink.addEventListener('click', () => navigateTo('signup-screen'));
         toLoginLink.addEventListener('click', () => navigateTo('login-screen'));
         toAdminLink.addEventListener('click', () => {
-            // For now, redirect to login with a hint. Admin access is handled by the login form submit.
             alert('กรุณาเข้าสู่ระบบด้วยชื่อผู้ใช้ "admin" เพื่อเข้าสู่หน้าผู้ดูแล');
         });
 
@@ -725,7 +687,7 @@
             }
 
             const newTransaction = {
-                id: Date.now(), // Use timestamp for unique ID
+                id: Date.now(),
                 description: descriptionInput.value,
                 amount: amount,
                 date: new Date().toISOString()
@@ -826,7 +788,6 @@
             navigateTo('login-screen');
         });
         
-        // Initial load
         if (currentUser) {
             navigateTo('home-screen', `สวัสดี, ${currentUser}`);
         } else {
