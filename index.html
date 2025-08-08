@@ -519,6 +519,7 @@
         let transactions = [];
         let users = {};
         let currentUser = localStorage.getItem('currentUser');
+        let currentTransactionKey = null;
 
         // --- Core Functions ---
         async function loadUsers() {
@@ -535,7 +536,10 @@
             const userRef = database.ref(`transactions/${currentUser}`);
             userRef.on('value', (snapshot) => {
                 const data = snapshot.val();
-                transactions = data ? Object.values(data).reverse() : [];
+                transactions = data ? Object.keys(data).map(key => ({
+                    ...data[key],
+                    key: key
+                })).reverse() : [];
                 updateBalance();
                 if (historyScreen.classList.contains('active')) {
                     renderTransactions();
@@ -548,24 +552,14 @@
             await userRef.push(transaction);
         }
 
-        async function updateTransaction(transactionId, updatedTransaction) {
+        async function updateTransaction(transactionKey, updatedTransaction) {
             const userRef = database.ref(`transactions/${currentUser}`);
-            const transactionRef = userRef.orderByChild('id').equalTo(transactionId);
-            const snapshot = await transactionRef.once('value');
-            if (snapshot.exists()) {
-                const key = Object.keys(snapshot.val())[0];
-                await userRef.child(key).update(updatedTransaction);
-            }
+            await userRef.child(transactionKey).update(updatedTransaction);
         }
         
-        async function deleteTransaction(transactionId) {
+        async function deleteTransaction(transactionKey) {
             const userRef = database.ref(`transactions/${currentUser}`);
-            const transactionRef = userRef.orderByChild('id').equalTo(transactionId);
-            const snapshot = await transactionRef.once('value');
-            if (snapshot.exists()) {
-                const key = Object.keys(snapshot.val())[0];
-                await userRef.child(key).remove();
-            }
+            await userRef.child(transactionKey).remove();
         }
 
         function navigateTo(screenId, headerText = 'โปรแกรมรายรับ-รายจ่าย') {
@@ -622,8 +616,8 @@
                     </div>
                     <div class="amount">${amountText} บาท</div>
                     <div class="transaction-actions">
-                        <button class="edit-btn" data-id="${item.id}">แก้ไข</button>
-                        <button class="delete-btn" data-id="${item.id}">ลบ</button>
+                        <button class="edit-btn" data-key="${item.key}">แก้ไข</button>
+                        <button class="delete-btn" data-key="${item.key}">ลบ</button>
                     </div>
                 `;
                 transactionListUl.appendChild(li);
@@ -738,7 +732,6 @@
             }
 
             const newTransaction = {
-                id: Date.now(),
                 description: descriptionInput.value,
                 amount: amount,
                 date: new Date().toISOString()
@@ -752,19 +745,19 @@
         });
 
         function handleEditClick(e) {
-            const transactionId = Number(e.target.dataset.id);
-            const transaction = transactions.find(t => t.id === transactionId);
+            const transactionKey = e.target.dataset.key;
+            const transaction = transactions.find(t => t.key === transactionKey);
             if (!transaction) return;
             
             editFormModal.classList.add('active');
             editDescription.value = transaction.description;
             editAmount.value = Math.abs(transaction.amount);
-            editForm.dataset.id = transactionId;
+            editForm.dataset.key = transactionKey;
         }
 
         editForm.addEventListener('submit', async (e) => {
             e.preventDefault();
-            const transactionId = Number(editForm.dataset.id);
+            const transactionKey = editForm.dataset.key;
             const newDescription = editDescription.value;
             const newAmount = parseFloat(editAmount.value);
             
@@ -773,12 +766,12 @@
                 return;
             }
 
-            const transactionIndex = transactions.findIndex(t => t.id === transactionId);
-            if (transactionIndex > -1) {
-                const oldAmount = transactions[transactionIndex].amount;
+            const transaction = transactions.find(t => t.key === transactionKey);
+            if (transaction) {
+                const oldAmount = transaction.amount;
                 const updatedAmount = oldAmount < 0 ? -newAmount : newAmount;
 
-                await updateTransaction(transactionId, {
+                await updateTransaction(transactionKey, {
                     description: newDescription,
                     amount: updatedAmount
                 });
@@ -791,9 +784,9 @@
         });
 
         async function handleDeleteClick(e) {
-            const transactionId = Number(e.target.dataset.id);
+            const transactionKey = e.target.dataset.key;
             if (confirm('ยืนยันการลบรายการนี้ใช่ไหม?')) {
-                await deleteTransaction(transactionId);
+                await deleteTransaction(transactionKey);
             }
         }
 
@@ -809,8 +802,8 @@
             transactions.forEach(item => {
                 const formattedDate = new Date(item.date).toLocaleDateString('th-TH');
                 const descriptionText = item.description || (item.amount >= 0 ? 'รับ' : 'จ่าย');
-                const amountText = (item.amount >= 0 ? '+' : '') + item.amount.toFixed(2);
                 const escapedDescription = `"${descriptionText.replace(/"/g, '""')}"`;
+                const amountText = (item.amount >= 0 ? '+' : '') + item.amount.toFixed(2);
                 csvContent += `${formattedDate},${escapedDescription},${amountText}\n`;
             });
 
