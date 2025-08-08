@@ -1,845 +1,895 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>โปรแกรมรายรับ-รายจ่าย</title>
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;700&display=swap');
-        
-        :root {
-            --primary-color: #0056b3;
-            --accent-color: #007bff;
-            --income-color: #2e7d32;
-            --expense-color: #c62828;
-            --background-color: #f0f2f5;
-            --card-bg-color: #ffffff;
-            --text-color: #333333;
-            --sub-text-color: #666666;
-            --border-color: #e0e0e0;
-        }
-        
-        body {
-            font-family: 'Kanit', sans-serif;
-            background-color: var(--background-color);
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-        }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>โปรแกรมรายรับ-รายจ่าย</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;700&display=swap');
+        
+        :root {
+            --primary-color: #0056b3;
+            --accent-color: #007bff;
+            --income-color: #2e7d32;
+            --expense-color: #c62828;
+            --background-color: #f0f2f5;
+            --card-bg-color: #ffffff;
+            --text-color: #333333;
+            --sub-text-color: #666666;
+            --border-color: #e0e0e0;
+        }
+        
+        body {
+            font-family: 'Kanit', sans-serif;
+            background-color: var(--background-color);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
 
-        .app-container {
-            width: 100%;
-            max-width: 420px;
-            height: 100vh;
-            background-color: var(--card-bg-color);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-            position: relative;
-        }
-        
-        .header {
-            text-align: center;
-            padding: 20px 0;
-            background-color: var(--primary-color);
-            color: white;
-            font-size: 24px;
-            font-weight: 500;
-        }
-        
-        .screen {
-            flex-grow: 1;
-            padding: 20px;
-            overflow-y: auto;
-            display: none;
-            flex-direction: column;
-            gap: 20px;
-        }
-        
-        .screen.active {
-            display: flex;
-        }
-        
-        .login-screen, .signup-screen, .admin-screen {
-            justify-content: center;
-            align-items: center;
-        }
+        .app-container {
+            width: 100%;
+            max-width: 420px;
+            height: 100vh;
+            background-color: var(--card-bg-color);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .header {
+            text-align: center;
+            padding: 20px 0;
+            background-color: var(--primary-color);
+            color: white;
+            font-size: 24px;
+            font-weight: 500;
+        }
+        
+        .screen {
+            flex-grow: 1;
+            padding: 20px;
+            overflow-y: auto;
+            display: none;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .screen.active {
+            display: flex;
+        }
+        
+        .login-screen, .signup-screen, .admin-screen {
+            justify-content: center;
+            align-items: center;
+        }
 
-        .auth-box {
-            text-align: center;
-            padding: 20px;
-            border-radius: 12px;
-            background-color: #fff;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            width: 100%;
-            max-width: 300px;
-        }
-        
-        .auth-box h2 {
-            margin-bottom: 20px;
-            color: var(--text-color);
-        }
-        
-        #login-form input, #signup-form input {
-            padding: 12px 15px;
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            font-size: 16px;
-            width: 100%;
-            box-sizing: border-box;
-            margin-bottom: 10px;
-        }
-        
-        .auth-button {
-            background-color: var(--accent-color);
-            color: white;
-            padding: 12px;
-            border-radius: 8px;
-            font-size: 16px;
-            font-weight: 500;
-            cursor: pointer;
-            border: none;
-            width: 100%;
-            transition: background-color 0.3s ease;
-        }
-        
-        .auth-button:hover {
-            background-color: #0056b3;
-        }
-        
-        .toggle-auth-text {
-            margin-top: 15px;
-            font-size: 14px;
-            color: var(--sub-text-color);
-        }
-        
-        .toggle-auth-text span {
-            color: var(--accent-color);
-            cursor: pointer;
-            font-weight: 500;
-        }
+        .auth-box {
+            text-align: center;
+            padding: 20px;
+            border-radius: 12px;
+            background-color: #fff;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 300px;
+        }
+        
+        .auth-box h2 {
+            margin-bottom: 20px;
+            color: var(--text-color);
+        }
+        
+        #login-form input, #signup-form input {
+            padding: 12px 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 16px;
+            width: 100%;
+            box-sizing: border-box;
+            margin-bottom: 10px;
+        }
+        
+        .auth-button {
+            background-color: var(--accent-color);
+            color: white;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            border: none;
+            width: 100%;
+            transition: background-color 0.3s ease;
+        }
+        
+        .auth-button:hover {
+            background-color: #0056b3;
+        }
+        
+        .toggle-auth-text {
+            margin-top: 15px;
+            font-size: 14px;
+            color: var(--sub-text-color);
+        }
+        
+        .toggle-auth-text span {
+            color: var(--accent-color);
+            cursor: pointer;
+            font-weight: 500;
+        }
 
-        .admin-link {
-            display: block;
-            margin-top: 15px;
-            font-size: 14px;
-            color: var(--sub-text-color);
-            cursor: pointer;
-        }
+        .admin-link {
+            display: block;
+            margin-top: 15px;
+            font-size: 14px;
+            color: var(--sub-text-color);
+            cursor: pointer;
+        }
 
-        .home-screen, .history-screen {
-            display: none;
-        }
-        
-        .balance-card {
-            background-color: #e8f5e9;
-            padding: 20px;
-            border-radius: 12px;
-            text-align: center;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-        }
-        
-        .balance-card h2 {
-            font-size: 16px;
-            color: var(--sub-text-color);
-            margin-top: 0;
-            margin-bottom: 5px;
-        }
-        
-        .balance-card .balance-amount {
-            font-size: 32px;
-            font-weight: 700;
-        }
-        
-        .input-section h3 {
-            text-align: center;
-            color: var(--text-color);
-            margin-bottom: 15px;
-            font-size: 20px;
-            font-weight: 500;
-        }
-        
-        #entry-form {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-        
-        #entry-form input {
-            padding: 12px 15px;
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            font-size: 16px;
-            width: 100%;
-            box-sizing: border-box;
-        }
-        
-        #entry-form input:focus {
-            outline: none;
-            border-color: var(--accent-color);
-            box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.2);
-        }
-        
-        .button-group {
-            display: flex;
-            gap: 10px;
-        }
-        
-        .button {
-            padding: 12px;
-            border-radius: 8px;
-            font-size: 16px;
-            font-weight: 500;
-            cursor: pointer;
-            border: none;
-            flex-grow: 1;
-            transition: background-color 0.3s ease, color 0.3s ease;
-        }
-        
-        .action-buttons {
-            display: flex;
-            gap: 10px;
-        }
-        
-        .action-button {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-grow: 1;
-            padding: 12px;
-            border-radius: 8px;
-            font-size: 16px;
-            font-weight: 500;
-            color: white;
-            cursor: pointer;
-            border: none;
-            transition: background-color 0.3s ease;
-        }
+        .home-screen, .history-screen {
+            display: none;
+        }
+        
+        .balance-card {
+            background-color: #e8f5e9;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+        
+        .balance-card h2 {
+            font-size: 16px;
+            color: var(--sub-text-color);
+            margin-top: 0;
+            margin-bottom: 5px;
+        }
+        
+        .balance-card .balance-amount {
+            font-size: 32px;
+            font-weight: 700;
+        }
+        
+        .input-section h3 {
+            text-align: center;
+            color: var(--text-color);
+            margin-bottom: 15px;
+            font-size: 20px;
+            font-weight: 500;
+        }
+        
+        #entry-form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        #entry-form input {
+            padding: 12px 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 16px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        
+        #entry-form input:focus {
+            outline: none;
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.2);
+        }
+        
+        .button-group {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .button {
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            border: none;
+            flex-grow: 1;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .action-button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-grow: 1;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 500;
+            color: white;
+            cursor: pointer;
+            border: none;
+            transition: background-color 0.3s ease;
+        }
 
-        .action-button .material-icons {
-            margin-right: 8px;
-        }
+        .action-button .material-icons {
+            margin-right: 8px;
+        }
 
-        .action-button.income {
-            background-color: var(--income-color);
-        }
-        
-        .action-button.expense {
-            background-color: var(--expense-color);
-        }
+        .action-button.income {
+            background-color: var(--income-color);
+        }
+        
+        .action-button.expense {
+            background-color: var(--expense-color);
+        }
 
-        .action-button.income:hover {
-            background-color: #266a2a;
-        }
-        
-        .action-button.expense:hover {
-            background-color: #a42121;
-        }
-        
-        .history-section {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-        
-        #view-history-button, #logout-button {
-            background-color: transparent;
-            color: var(--accent-color);
-            border: 1px solid var(--accent-color);
-        }
-        
-        #view-history-button:hover, #logout-button:hover {
-            background-color: var(--accent-color);
-            color: white;
-        }
-        
-        .history-screen, .admin-screen {
-            padding-bottom: 80px;
-        }
-        
-        .transaction-list h3, .admin-list h3 {
-            margin: 0;
-            margin-bottom: 15px;
-            color: var(--text-color);
-            font-size: 20px;
-            font-weight: 500;
-        }
-        
-        #transaction-list-ul, .admin-list ul {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-        
-        .transaction-item, .admin-user-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 15px;
-            background-color: var(--card-bg-color);
-            border-radius: 8px;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-        }
-        
-        .transaction-details {
-            flex-grow: 1;
-            padding-right: 10px;
-        }
-        
-        .transaction-details .description {
-            font-weight: 500;
-            color: var(--text-color);
-        }
-        
-        .transaction-details .date {
-            font-size: 12px;
-            color: var(--sub-text-color);
-        }
-        
-        .transaction-item .amount {
-            font-size: 18px;
-            font-weight: 700;
-        }
-        
-        .transaction-item.income .amount {
-            color: var(--income-color);
-        }
-        
-        .transaction-item.expense .amount {
-            color: var(--expense-color);
-        }
+        .action-button.income:hover {
+            background-color: #266a2a;
+        }
+        
+        .action-button.expense:hover {
+            background-color: #a42121;
+        }
+        
+        .history-section {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        #view-history-button, #logout-button {
+            background-color: transparent;
+            color: var(--accent-color);
+            border: 1px solid var(--accent-color);
+        }
+        
+        #view-history-button:hover, #logout-button:hover {
+            background-color: var(--accent-color);
+            color: white;
+        }
+        
+        .history-screen, .admin-screen {
+            padding-bottom: 80px;
+        }
+        
+        .transaction-list h3, .admin-list h3 {
+            margin: 0;
+            margin-bottom: 15px;
+            color: var(--text-color);
+            font-size: 20px;
+            font-weight: 500;
+        }
+        
+        #transaction-list-ul, .admin-list ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .transaction-item, .admin-user-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            background-color: var(--card-bg-color);
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        }
+        
+        .transaction-details {
+            flex-grow: 1;
+            padding-right: 10px;
+        }
+        
+        .transaction-details .description {
+            font-weight: 500;
+            color: var(--text-color);
+        }
+        
+        .transaction-details .date {
+            font-size: 12px;
+            color: var(--sub-text-color);
+        }
+        
+        .transaction-item .amount {
+            font-size: 18px;
+            font-weight: 700;
+        }
+        
+        .transaction-item.income .amount {
+            color: var(--income-color);
+        }
+        
+        .transaction-item.expense .amount {
+            color: var(--expense-color);
+        }
 
-        .transaction-actions {
-            display: flex;
-            gap: 5px;
-        }
-        
-        .transaction-actions button {
-            background: none;
-            border: 1px solid var(--border-color);
-            border-radius: 4px;
-            padding: 5px 8px;
-            font-size: 12px;
-            cursor: pointer;
-        }
-        
-        .history-footer {
-            margin-top: auto;
-            padding-top: 20px;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-        
-        .history-footer .button {
-            width: 100%;
-        }
+        .transaction-actions {
+            display: flex;
+            gap: 5px;
+        }
+        
+        .transaction-actions button {
+            background: none;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            padding: 5px 8px;
+            font-size: 12px;
+            cursor: pointer;
+        }
+        
+        .history-footer {
+            margin-top: auto;
+            padding-top: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .history-footer .button {
+            width: 100%;
+        }
 
-        .edit-form-container {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-            display: none;
-        }
-        
-        .edit-form-container.active {
-            display: flex;
-        }
+        .edit-form-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            display: none;
+        }
+        
+        .edit-form-container.active {
+            display: flex;
+        }
 
-        .edit-form-box {
-            background: #fff;
-            padding: 20px;
-            border-radius: 12px;
-            width: 90%;
-            max-width: 350px;
-        }
-        
-        .edit-form-box h3 {
-            margin-top: 0;
-        }
-        
-        .edit-form-box input {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 10px;
-            box-sizing: border-box;
-        }
-        
-        .edit-form-actions {
-            display: flex;
-            gap: 10px;
-            justify-content: flex-end;
-            margin-top: 10px;
-        }
-    </style>
+        .edit-form-box {
+            background: #fff;
+            padding: 20px;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 350px;
+        }
+        
+        .edit-form-box h3 {
+            margin-top: 0;
+        }
+        
+        .edit-form-box input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            box-sizing: border-box;
+        }
+        
+        .edit-form-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+            margin-top: 10px;
+        }
+    </style>
 </head>
 <body>
 
-    <div class="app-container">
-        
-        <div class="header" id="app-header">
-            โปรแกรมรายรับ-รายจ่าย
-        </div>
+    <div class="app-container">
+        
+        <div class="header" id="app-header">
+            โปรแกรมรายรับ-รายจ่าย
+        </div>
 
-        <div class="screen login-screen" id="login-screen">
-            <div class="auth-box">
-                <h2>เข้าสู่ระบบ</h2>
-                <form id="login-form">
-                    <input type="text" id="login-username-input" placeholder="ชื่อผู้ใช้งาน" required>
-                    <input type="password" id="login-pin-input" placeholder="รหัส PIN (4 หลัก)" required maxlength="4">
-                    <button type="submit" class="auth-button">เข้าสู่ระบบ</button>
-                </form>
-                <div class="toggle-auth-text">
-                    หากยังไม่มีบัญชี <span id="to-signup-link">สมัครใหม่</span>
-                </div>
-                <div class="admin-link" id="to-admin-link">ผู้ดูแล</div>
-            </div>
-        </div>
+        <div class="screen login-screen" id="login-screen">
+            <div class="auth-box">
+                <h2>เข้าสู่ระบบ</h2>
+                <form id="login-form">
+                    <input type="text" id="login-username-input" placeholder="ชื่อผู้ใช้งาน" required>
+                    <input type="password" id="login-pin-input" placeholder="รหัส PIN (4 หลัก)" required maxlength="4">
+                    <button type="submit" class="auth-button">เข้าสู่ระบบ</button>
+                </form>
+                <div class="toggle-auth-text">
+                    หากยังไม่มีบัญชี <span id="to-signup-link">สมัครใหม่</span>
+                </div>
+                <div class="admin-link" id="to-admin-link">ผู้ดูแล</div>
+            </div>
+        </div>
 
-        <div class="screen signup-screen" id="signup-screen">
-            <div class="auth-box">
-                <h2>สมัครใหม่</h2>
-                <form id="signup-form">
-                    <input type="text" id="signup-username-input" placeholder="ชื่อผู้ใช้งาน" required>
-                    <input type="password" id="signup-pin-input" placeholder="ตั้งรหัส PIN (4 หลัก)" required maxlength="4">
-                    <input type="password" id="signup-pin-confirm" placeholder="ยืนยันรหัส PIN" required maxlength="4">
-                    <button type="submit" class="auth-button">ลงทะเบียน</button>
-                </form>
-                <div class="toggle-auth-text">
-                    มีบัญชีอยู่แล้ว? <span id="to-login-link">เข้าสู่ระบบ</span>
-                </div>
-            </div>
-        </div>
+        <div class="screen signup-screen" id="signup-screen">
+            <div class="auth-box">
+                <h2>สมัครใหม่</h2>
+                <form id="signup-form">
+                    <input type="text" id="signup-username-input" placeholder="ชื่อผู้ใช้งาน" required>
+                    <input type="password" id="signup-pin-input" placeholder="ตั้งรหัส PIN (4 หลัก)" required maxlength="4">
+                    <input type="password" id="signup-pin-confirm" placeholder="ยืนยันรหัส PIN" required maxlength="4">
+                    <button type="submit" class="auth-button">ลงทะเบียน</button>
+                </form>
+                <div class="toggle-auth-text">
+                    มีบัญชีอยู่แล้ว? <span id="to-login-link">เข้าสู่ระบบ</span>
+                </div>
+            </div>
+        </div>
 
-        <div class="screen home-screen" id="home-screen">
-            <div class="balance-card">
-                <h2>ยอดคงเหลือปัจจุบัน</h2>
-                <div class="balance-amount" id="current-balance">0.00 บาท</div>
-            </div>
-            
-            <div class="input-section">
-                <h3>บันทึกรายการ</h3>
-                <form id="entry-form">
-                    <input type="text" id="description" placeholder="รายการ (ถ้ามี)">
-                    <div class="button-group">
-                        <input type="number" id="amount-input" placeholder="จำนวนเงิน" required>
-                    </div>
-                    <div class="action-buttons">
-                        <button type="button" class="action-button income" id="record-income-button">
-                            <span class="material-icons">add</span>
-                            บันทึกรายรับ
-                        </button>
-                        <button type="button" class="action-button expense" id="record-expense-button">
-                            <span class="material-icons">remove</span>
-                            บันทึกรายจ่าย
-                        </button>
-                    </div>
-                </form>
-            </div>
-            
-            <div class="history-section">
-                <button class="button" id="view-history-button">ดูรายการย้อนหลัง</button>
-                <button class="button" id="logout-button">ออกจากระบบ</button>
-            </div>
-        </div>
-        
-        <div class="screen history-screen" id="history-screen">
-            <div class="transaction-list">
-                <h3>รายการทั้งหมด</h3>
-                <ul id="transaction-list-ul">
-                    </ul>
-            </div>
-            <div class="history-footer">
-                <button class="button" id="download-button">ดาวน์โหลดเป็น CSV</button>
-                <button class="button" id="back-to-home-button">กลับไปหน้าหลัก</button>
-            </div>
-        </div>
-        
-        <div class="screen admin-screen" id="admin-screen">
-            <div class="admin-list">
-                <h3>ผู้ใช้งานทั้งหมด</h3>
-                <ul id="admin-user-list">
-                    </ul>
-            </div>
-        </div>
+        <div class="screen home-screen" id="home-screen">
+            <div class="balance-card">
+                <h2>ยอดคงเหลือปัจจุบัน</h2>
+                <div class="balance-amount" id="current-balance">0.00 บาท</div>
+            </div>
+            
+            <div class="input-section">
+                <h3>บันทึกรายการ</h3>
+                <form id="entry-form">
+                    <input type="text" id="description" placeholder="รายการ (ถ้ามี)">
+                    <div class="button-group">
+                        <input type="number" id="amount-input" placeholder="จำนวนเงิน" required>
+                    </div>
+                    <div class="action-buttons">
+                        <button type="button" class="action-button income" id="record-income-button">
+                            <span class="material-icons">add</span>
+                            บันทึกรายรับ
+                        </button>
+                        <button type="button" class="action-button expense" id="record-expense-button">
+                            <span class="material-icons">remove</span>
+                            บันทึกรายจ่าย
+                        </button>
+                    </div>
+                </form>
+            </div>
+            
+            <div class="history-section">
+                <button class="button" id="view-history-button">ดูรายการย้อนหลัง</button>
+                <button class="button" id="logout-button">ออกจากระบบ</button>
+            </div>
+        </div>
+        
+        <div class="screen history-screen" id="history-screen">
+            <div class="transaction-list">
+                <h3>รายการทั้งหมด</h3>
+                <ul id="transaction-list-ul">
+                    </ul>
+            </div>
+            <div class="history-footer">
+                <button class="button" id="download-button">ดาวน์โหลดเป็น CSV</button>
+                <button class="button" id="back-to-home-button">กลับไปหน้าหลัก</button>
+            </div>
+        </div>
+        
+        <div class="screen admin-screen" id="admin-screen">
+            <div class="admin-list">
+                <h3>ผู้ใช้งานทั้งหมด</h3>
+                <ul id="admin-user-list">
+                    </ul>
+            </div>
+        </div>
 
-        <div class="edit-form-container" id="edit-form-modal">
-            <div class="edit-form-box">
-                <h3>แก้ไขรายการ</h3>
-                <form id="edit-form">
-                    <input type="text" id="edit-description" placeholder="รายการ">
-                    <input type="number" id="edit-amount" placeholder="จำนวนเงิน">
-                    <div class="edit-form-actions">
-                        <button type="button" id="cancel-edit-button">ยกเลิก</button>
-                        <button type="submit">บันทึก</button>
-                    </div>
-                </form>
-            </div>
-        </div>
+        <div class="edit-form-container" id="edit-form-modal">
+            <div class="edit-form-box">
+                <h3>แก้ไขรายการ</h3>
+                <form id="edit-form">
+                    <input type="text" id="edit-description" placeholder="รายการ">
+                    <input type="number" id="edit-amount" placeholder="จำนวนเงิน">
+                    <div class="edit-form-actions">
+                        <button type="button" id="cancel-edit-button">ยกเลิก</button>
+                        <button type="submit">บันทึก</button>
+                    </div>
+                </form>
+            </div>
+        </div>
 
-    </div>
+    </div>
 
-    <script>
-        // DOM Elements
-        const screens = document.querySelectorAll('.screen');
-        const loginScreen = document.getElementById('login-screen');
-        const signupScreen = document.getElementById('signup-screen');
-        const homeScreen = document.getElementById('home-screen');
-        const historyScreen = document.getElementById('history-screen');
-        const adminScreen = document.getElementById('admin-screen');
-        const appHeader = document.getElementById('app-header');
+                    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyA5X317BW4NyV8XbIDvLLj5gQNBU9M35Ig",
+            authDomain: "my-money-tracker-5f776.firebaseapp.com",
+            projectId: "my-money-tracker-5f776",
+            storageBucket: "my-money-tracker-5f776.firebasestorage.app",
+            messagingSenderId: "203454504201",
+            appId: "1:203454504201:web:71656ee35ec46cfb9107d8",
+            measurementId: "G-DCVL4QNPW5"
+        };
+        firebase.initializeApp(firebaseConfig);
+    </script>
+                <script>
+        // เพิ่มโค้ดส่วนนี้ก่อนโค้ดเดิมทั้งหมด
+        const db = firebase.firestore();
+        // ------------------------------------
 
-        const loginForm = document.getElementById('login-form');
-        const loginUsernameInput = document.getElementById('login-username-input');
-        const loginPinInput = document.getElementById('login-pin-input');
-        const signupForm = document.getElementById('signup-form');
-        const signupUsernameInput = document.getElementById('signup-username-input');
-        const signupPinInput = document.getElementById('signup-pin-input');
-        const signupPinConfirm = document.getElementById('signup-pin-confirm');
-        const toSignupLink = document.getElementById('to-signup-link');
-        const toLoginLink = document.getElementById('to-login-link');
-        const toAdminLink = document.getElementById('to-admin-link');
+        // DOM Elements
+        const screens = document.querySelectorAll('.screen');
+        const loginScreen = document.getElementById('login-screen');
+        const signupScreen = document.getElementById('signup-screen');
+        const homeScreen = document.getElementById('home-screen');
+        const historyScreen = document.getElementById('history-screen');
+        const adminScreen = document.getElementById('admin-screen');
+        const appHeader = document.getElementById('app-header');
 
-        const entryForm = document.getElementById('entry-form');
-        const descriptionInput = document.getElementById('description');
-        const amountInput = document.getElementById('amount-input');
-        const recordIncomeButton = document.getElementById('record-income-button');
-        const recordExpenseButton = document.getElementById('record-expense-button');
+        const loginForm = document.getElementById('login-form');
+        const loginUsernameInput = document.getElementById('login-username-input');
+        const loginPinInput = document.getElementById('login-pin-input');
+        const signupForm = document.getElementById('signup-form');
+        const signupUsernameInput = document.getElementById('signup-username-input');
+        const signupPinInput = document.getElementById('signup-pin-input');
+        const signupPinConfirm = document.getElementById('signup-pin-confirm');
+        const toSignupLink = document.getElementById('to-signup-link');
+        const toLoginLink = document.getElementById('to-login-link');
+        const toAdminLink = document.getElementById('to-admin-link');
 
-        const currentBalanceSpan = document.getElementById('current-balance');
-        const transactionListUl = document.getElementById('transaction-list-ul');
-        const viewHistoryButton = document.getElementById('view-history-button');
-        const backToHomeButton = document.getElementById('back-to-home-button');
-        const downloadButton = document.getElementById('download-button');
-        const logoutButton = document.getElementById('logout-button');
-        
-        const adminUserList = document.getElementById('admin-user-list');
+        const entryForm = document.getElementById('entry-form');
+        const descriptionInput = document.getElementById('description');
+        const amountInput = document.getElementById('amount-input');
+        const recordIncomeButton = document.getElementById('record-income-button');
+        const recordExpenseButton = document.getElementById('record-expense-button');
 
-        const editFormModal = document.getElementById('edit-form-modal');
-        const editForm = document.getElementById('edit-form');
-        const editDescription = document.getElementById('edit-description');
-        const editAmount = document.getElementById('edit-amount');
-        const cancelEditButton = document.getElementById('cancel-edit-button');
+        const currentBalanceSpan = document.getElementById('current-balance');
+        const transactionListUl = document.getElementById('transaction-list-ul');
+        const viewHistoryButton = document.getElementById('view-history-button');
+        const backToHomeButton = document.getElementById('back-to-home-button');
+        const downloadButton = document.getElementById('download-button');
+        const logoutButton = document.getElementById('logout-button');
+        
+        const adminUserList = document.getElementById('admin-user-list');
 
-        // Global State
-        const ADMIN_PIN = '1234';
-        let transactions = [];
-        let users = JSON.parse(localStorage.getItem('users')) || {};
-        let currentUser = localStorage.getItem('currentUser');
+        const editFormModal = document.getElementById('edit-form-modal');
+        const editForm = document.getElementById('edit-form');
+        const editDescription = document.getElementById('edit-description');
+        const editAmount = document.getElementById('edit-amount');
+        const cancelEditButton = document.getElementById('cancel-edit-button');
 
-        // --- Core Functions ---
-        function saveUsers() {
-            localStorage.setItem('users', JSON.stringify(users));
-        }
+        // Global State
+        const ADMIN_PIN = '1234';
+        let transactions = [];
+        let currentUser = localStorage.getItem('currentUser');
 
-        function loadTransactions() {
-            const data = localStorage.getItem(`transactions_${currentUser}`);
-            transactions = data ? JSON.parse(data) : [];
-        }
+        // --- Core Functions (ใช้ Firebase แทน localStorage) ---
+        function navigateTo(screenId, headerText = 'โปรแกรมรายรับ-รายจ่าย') {
+            screens.forEach(screen => screen.classList.remove('active'));
+            document.getElementById(screenId).classList.add('active');
+            appHeader.textContent = headerText;
 
-        function saveTransactions() {
-            localStorage.setItem(`transactions_${currentUser}`, JSON.stringify(transactions));
-        }
+            if (screenId === 'home-screen') {
+                loadTransactions();
+            } else if (screenId === 'history-screen') {
+                renderTransactions();
+            } else if (screenId === 'admin-screen') {
+                renderAdminList();
+            }
+        }
 
-        function navigateTo(screenId, headerText = 'โปรแกรมรายรับ-รายจ่าย') {
-            screens.forEach(screen => screen.classList.remove('active'));
-            document.getElementById(screenId).classList.add('active');
-            appHeader.textContent = headerText;
+        function updateBalance() {
+            const balance = transactions.reduce((acc, item) => acc + item.amount, 0);
+            const balanceAmountDiv = document.querySelector('.balance-amount');
+            balanceAmountDiv.textContent = balance.toFixed(2) + ' บาท';
+            
+            if (balance < 0) {
+                balanceAmountDiv.style.color = 'var(--expense-color)';
+            } else {
+                balanceAmountDiv.style.color = 'var(--income-color)';
+            }
+        }
 
-            if (screenId === 'home-screen') {
-                loadTransactions();
-                updateBalance();
-            } else if (screenId === 'history-screen') {
-                renderTransactions();
-            } else if (screenId === 'admin-screen') {
-                renderAdminList();
-            }
-        }
+        function renderTransactions() {
+            transactionListUl.innerHTML = '';
+            if (transactions.length === 0) {
+                transactionListUl.innerHTML = '<li style="text-align:center; color:var(--sub-text-color);">ยังไม่มีรายการ</li>';
+                return;
+            }
 
-        function updateBalance() {
-            const balance = transactions.reduce((acc, item) => acc + item.amount, 0);
-            const balanceAmountDiv = document.querySelector('.balance-amount');
-            balanceAmountDiv.textContent = balance.toFixed(2) + ' บาท';
-            
-            if (balance < 0) {
-                balanceAmountDiv.style.color = 'var(--expense-color)';
-            } else {
-                balanceAmountDiv.style.color = 'var(--income-color)';
-            }
-        }
+            transactions.forEach(item => {
+                const li = document.createElement('li');
+                const type = item.amount >= 0 ? 'income' : 'expense';
+                li.classList.add('transaction-item', type);
+                
+                const formattedDate = new Date(item.date).toLocaleDateString('th-TH', {
+                    day: 'numeric',
+                    month: 'short',
+                    year: 'numeric'
+                });
 
-        function renderTransactions() {
-            transactionListUl.innerHTML = '';
-            if (transactions.length === 0) {
-                transactionListUl.innerHTML = '<li style="text-align:center; color:var(--sub-text-color);">ยังไม่มีรายการ</li>';
-                return;
-            }
+                const amountText = (item.amount >= 0 ? '+' : '') + item.amount.toFixed(2);
+                const descriptionText = item.description || (item.amount >= 0 ? 'รับ' : 'จ่าย');
+                
+                li.innerHTML = `
+                    <div class="transaction-details">
+                        <div class="description">${descriptionText}</div>
+                        <div class="date">${formattedDate}</div>
+                    </div>
+                    <div class="amount">${amountText} บาท</div>
+                    <div class="transaction-actions">
+                        <button class="edit-btn" data-id="${item.id}">แก้ไข</button>
+                        <button class="delete-btn" data-id="${item.id}">ลบ</button>
+                    </div>
+                `;
+                transactionListUl.appendChild(li);
+            });
 
-            transactions.forEach(item => {
-                const li = document.createElement('li');
-                const type = item.amount >= 0 ? 'income' : 'expense';
-                li.classList.add('transaction-item', type);
-                
-                const formattedDate = new Date(item.date).toLocaleDateString('th-TH', {
-                    day: 'numeric',
-                    month: 'short',
-                    year: 'numeric'
-                });
+            document.querySelectorAll('.edit-btn').forEach(button => {
+                button.addEventListener('click', handleEditClick);
+            });
+            document.querySelectorAll('.delete-btn').forEach(button => {
+                button.addEventListener('click', handleDeleteClick);
+            });
+        }
+        
+        function renderAdminList() {
+            // ดึงข้อมูลผู้ใช้จาก Firestore
+            db.collection('users').get().then(querySnapshot => {
+                adminUserList.innerHTML = '';
+                if (querySnapshot.empty) {
+                    adminUserList.innerHTML = '<li style="text-align:center; color:var(--sub-text-color);">ยังไม่มีผู้ใช้งาน</li>';
+                    return;
+                }
+                
+                querySnapshot.forEach(doc => {
+                    const username = doc.id;
+                    const data = doc.data();
+                    const li = document.createElement('li');
+                    li.classList.add('admin-user-item');
+                    li.innerHTML = `
+                        <div>ชื่อผู้ใช้: ${username}</div>
+                        <div>รหัส PIN: ${data.pin}</div>
+                    `;
+                    adminUserList.appendChild(li);
+                });
+            });
+        }
 
-                const amountText = (item.amount >= 0 ? '+' : '') + item.amount.toFixed(2);
-                const descriptionText = item.description || (item.amount >= 0 ? 'รับ' : 'จ่าย');
-                
-                li.innerHTML = `
-                    <div class="transaction-details">
-                        <div class="description">${descriptionText}</div>
-                        <div class="date">${formattedDate}</div>
-                    </div>
-                    <div class="amount">${amountText} บาท</div>
-                    <div class="transaction-actions">
-                        <button class="edit-btn" data-id="${item.id}">แก้ไข</button>
-                        <button class="delete-btn" data-id="${item.id}">ลบ</button>
-                    </div>
-                `;
-                transactionListUl.appendChild(li);
-            });
+        // --- Event Handlers ---
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const username = loginUsernameInput.value.trim();
+            const pin = loginPinInput.value.trim();
 
-            document.querySelectorAll('.edit-btn').forEach(button => {
-                button.addEventListener('click', handleEditClick);
-            });
-            document.querySelectorAll('.delete-btn').forEach(button => {
-                button.addEventListener('click', handleDeleteClick);
-            });
-        }
-        
-        function renderAdminList() {
-            adminUserList.innerHTML = '';
-            const allUsers = JSON.parse(localStorage.getItem('users'));
-            if (!allUsers || Object.keys(allUsers).length === 0) {
-                adminUserList.innerHTML = '<li style="text-align:center; color:var(--sub-text-color);">ยังไม่มีผู้ใช้งาน</li>';
-                return;
-            }
-            
-            for (const username in allUsers) {
-                const li = document.createElement('li');
-                li.classList.add('admin-user-item');
-                li.innerHTML = `
-                    <div>ชื่อผู้ใช้: ${username}</div>
-                    <div>รหัส PIN: ${allUsers[username]}</div>
-                `;
-                adminUserList.appendChild(li);
-            }
-        }
+            if (username.toLowerCase() === 'admin' && pin === ADMIN_PIN) {
+                navigateTo('admin-screen', 'หน้าผู้ดูแล');
+                loginUsernameInput.value = '';
+                loginPinInput.value = '';
+                return;
+            }
+            try {
+                const userDoc = await db.collection('users').doc(username).get();
+                if (userDoc.exists && userDoc.data().pin === pin) {
+                    currentUser = username;
+                    localStorage.setItem('currentUser', currentUser);
+                    navigateTo('home-screen', `สวัสดี, ${currentUser}`);
+                    loginUsernameInput.value = '';
+                    loginPinInput.value = '';
+                } else {
+                    alert('ชื่อผู้ใช้หรือรหัส PIN ไม่ถูกต้อง');
+                }
+            } catch (error) {
+                console.error("Error logging in: ", error);
+                alert('เกิดข้อผิดพลาดในการเข้าสู่ระบบ');
+            }
+        });
+        
+        signupForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const username = signupUsernameInput.value.trim();
+            const pin = signupPinInput.value.trim();
+            const pinConfirm = signupPinConfirm.value.trim();
 
-        // --- Event Handlers ---
-        loginForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            const username = loginUsernameInput.value.trim();
-            const pin = loginPinInput.value.trim();
+            if (username.toLowerCase() === 'admin') {
+                alert('ไม่สามารถใช้ชื่อผู้ใช้ "admin" ได้');
+                return;
+            }
+            
+            if (pin.length !== 4) {
+                alert('รหัส PIN ต้องเป็นตัวเลข 4 หลัก');
+                return;
+            }
+            
+            if (pin !== pinConfirm) {
+                alert('รหัส PIN ไม่ตรงกัน');
+                return;
+            }
+            
+            try {
+                const userDoc = await db.collection('users').doc(username).get();
+                if (userDoc.exists) {
+                    alert('ชื่อผู้ใช้นี้ถูกใช้แล้ว');
+                    return;
+                }
+                await db.collection('users').doc(username).set({ pin: pin });
+                alert('ลงทะเบียนสำเร็จ! กรุณาเข้าสู่ระบบ');
+                navigateTo('login-screen');
+                signupUsernameInput.value = '';
+                signupPinInput.value = '';
+                signupPinConfirm.value = '';
+            } catch (error) {
+                console.error("Error signing up: ", error);
+                alert('เกิดข้อผิดพลาดในการลงทะเบียน');
+            }
+        });
+        
+        toSignupLink.addEventListener('click', () => navigateTo('signup-screen'));
+        toLoginLink.addEventListener('click', () => navigateTo('login-screen'));
+        toAdminLink.addEventListener('click', () => {
+            alert('กรุณาเข้าสู่ระบบด้วยชื่อผู้ใช้ "admin" เพื่อเข้าสู่หน้าผู้ดูแล');
+        });
 
-            if (username.toLowerCase() === 'admin' && pin === ADMIN_PIN) {
-                navigateTo('admin-screen', 'หน้าผู้ดูแล');
-                loginUsernameInput.value = '';
-                loginPinInput.value = '';
-                return;
-            }
+        // Event listener for recording income
+        recordIncomeButton.addEventListener('click', async () => {
+            const amount = parseFloat(amountInput.value);
+            if (isNaN(amount) || amount <= 0) {
+                alert('กรุณากรอกจำนวนเงินรับที่ถูกต้อง');
+                return;
+            }
+            const description = descriptionInput.value || 'เงินรับ';
+            try {
+                await db.collection('users').doc(currentUser).collection('transactions').add({
+                    description: description,
+                    amount: amount,
+                    date: firebase.firestore.FieldValue.serverTimestamp()
+                });
+                descriptionInput.value = '';
+                amountInput.value = '';
+            } catch (error) {
+                console.error("Error adding income: ", error);
+                alert('เกิดข้อผิดพลาดในการบันทึกรายการ');
+            }
+        });
+        
+        // Event listener for recording expense
+        recordExpenseButton.addEventListener('click', async () => {
+            const amount = parseFloat(amountInput.value);
+            if (isNaN(amount) || amount <= 0) {
+                alert('กรุณากรอกจำนวนเงินจ่ายที่ถูกต้อง');
+                return;
+            }
+            const description = descriptionInput.value || 'เงินจ่าย';
+            try {
+                await db.collection('users').doc(currentUser).collection('transactions').add({
+                    description: description,
+                    amount: -amount,
+                    date: firebase.firestore.FieldValue.serverTimestamp()
+                });
+                descriptionInput.value = '';
+                amountInput.value = '';
+            } catch (error) {
+                console.error("Error adding expense: ", error);
+                alert('เกิดข้อผิดพลาดในการบันทึกรายการ');
+            }
+        });
 
-            if (users[username] && users[username] === pin) {
-                currentUser = username;
-                localStorage.setItem('currentUser', currentUser);
-                navigateTo('home-screen', `สวัสดี, ${currentUser}`);
-                loginUsernameInput.value = '';
-                loginPinInput.value = '';
-            } else {
-                alert('ชื่อผู้ใช้หรือรหัส PIN ไม่ถูกต้อง');
-            }
-        });
-        
-        signupForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            const username = signupUsernameInput.value.trim();
-            const pin = signupPinInput.value.trim();
-            const pinConfirm = signupPinConfirm.value.trim();
+        function handleEditClick(e) {
+            const transactionId = e.target.dataset.id;
+            const transaction = transactions.find(t => t.id === transactionId);
+            if (!transaction) return;
+            
+            editFormModal.classList.add('active');
+            editDescription.value = transaction.description;
+            editAmount.value = Math.abs(transaction.amount);
+            editForm.dataset.id = transactionId;
+        }
 
-            if (username.toLowerCase() === 'admin') {
-                alert('ไม่สามารถใช้ชื่อผู้ใช้ "admin" ได้');
-                return;
-            }
-            
-            if (users[username]) {
-                alert('ชื่อผู้ใช้นี้ถูกใช้แล้ว');
-                return;
-            }
-            
-            if (pin.length !== 4) {
-                alert('รหัส PIN ต้องเป็นตัวเลข 4 หลัก');
-                return;
-            }
-            
-            if (pin !== pinConfirm) {
-                alert('รหัส PIN ไม่ตรงกัน');
-                return;
-            }
-            
-            users[username] = pin;
-            saveUsers();
-            alert('ลงทะเบียนสำเร็จ! กรุณาเข้าสู่ระบบ');
-            navigateTo('login-screen');
-            signupUsernameInput.value = '';
-            signupPinInput.value = '';
-            signupPinConfirm.value = '';
-        });
-        
-        toSignupLink.addEventListener('click', () => navigateTo('signup-screen'));
-        toLoginLink.addEventListener('click', () => navigateTo('login-screen'));
-        toAdminLink.addEventListener('click', () => {
-            alert('กรุณาเข้าสู่ระบบด้วยชื่อผู้ใช้ "admin" เพื่อเข้าสู่หน้าผู้ดูแล');
-        });
+        editForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const transactionId = editForm.dataset.id;
+            const newDescription = editDescription.value;
+            const newAmount = parseFloat(editAmount.value);
+            
+            if (isNaN(newAmount) || newAmount <= 0) {
+                alert('กรุณากรอกจำนวนเงินที่ถูกต้อง');
+                return;
+            }
+            try {
+                const transactionToUpdate = transactions.find(t => t.id === transactionId);
+                const finalAmount = transactionToUpdate.amount < 0 ? -newAmount : newAmount;
 
-        // Event listener for recording income
-        recordIncomeButton.addEventListener('click', () => {
-            const amount = parseFloat(amountInput.value);
-            if (isNaN(amount) || amount <= 0) {
-                alert('กรุณากรอกจำนวนเงินรับที่ถูกต้อง');
-                return;
-            }
-            const newTransaction = {
-                id: Date.now(),
-                description: descriptionInput.value || 'เงินรับ',
-                amount: amount,
-                date: new Date().toISOString()
-            };
-            transactions.unshift(newTransaction);
-            saveTransactions();
-            updateBalance();
-            descriptionInput.value = '';
-            amountInput.value = '';
-        });
-        
-        // Event listener for recording expense
-        recordExpenseButton.addEventListener('click', () => {
-            const amount = parseFloat(amountInput.value);
-            if (isNaN(amount) || amount <= 0) {
-                alert('กรุณากรอกจำนวนเงินจ่ายที่ถูกต้อง');
-                return;
-            }
-            const newTransaction = {
-                id: Date.now(),
-                description: descriptionInput.value || 'เงินจ่าย',
-                amount: -amount,
-                date: new Date().toISOString()
-            };
-            transactions.unshift(newTransaction);
-            saveTransactions();
-            updateBalance();
-            descriptionInput.value = '';
-            amountInput.value = '';
-        });
+                await db.collection('users').doc(currentUser).collection('transactions').doc(transactionId).update({
+                    description: newDescription,
+                    amount: finalAmount
+                });
+                editFormModal.classList.remove('active');
+            } catch (error) {
+                console.error("Error updating transaction: ", error);
+                alert('เกิดข้อผิดพลาดในการแก้ไขรายการ');
+            }
+        });
 
-        function handleEditClick(e) {
-            const transactionId = Number(e.target.dataset.id);
-            const transaction = transactions.find(t => t.id === transactionId);
-            if (!transaction) return;
-            
-            editFormModal.classList.add('active');
-            editDescription.value = transaction.description;
-            editAmount.value = Math.abs(transaction.amount);
-            editForm.dataset.id = transactionId;
-        }
+        cancelEditButton.addEventListener('click', () => {
+            editFormModal.classList.remove('active');
+        });
 
-        editForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            const transactionId = Number(editForm.dataset.id);
-            const newDescription = editDescription.value;
-            const newAmount = parseFloat(editAmount.value);
-            
-            if (isNaN(newAmount) || newAmount <= 0) {
-                alert('กรุณากรอกจำนวนเงินที่ถูกต้อง');
-                return;
-            }
+        async function handleDeleteClick(e) {
+            const transactionId = e.target.dataset.id;
+            if (confirm('ยืนยันการลบรายการนี้ใช่ไหม?')) {
+                try {
+                    await db.collection('users').doc(currentUser).collection('transactions').doc(transactionId).delete();
+                } catch (error) {
+                    console.error("Error deleting transaction: ", error);
+                    alert('เกิดข้อผิดพลาดในการลบรายการ');
+                }
+            }
+        }
 
-            const transactionIndex = transactions.findIndex(t => t.id === transactionId);
-            if (transactionIndex > -1) {
-                transactions[transactionIndex].description = newDescription;
-                if (transactions[transactionIndex].amount < 0) {
-                    transactions[transactionIndex].amount = -newAmount;
-                } else {
-                    transactions[transactionIndex].amount = newAmount;
-                }
-                saveTransactions();
-                renderTransactions();
-                updateBalance();
-            }
-            editFormModal.classList.remove('active');
-        });
+        downloadButton.addEventListener('click', () => {
+            if (transactions.length === 0) {
+                alert('ยังไม่มีรายการให้ดาวน์โหลด');
+                return;
+            }
 
-        cancelEditButton.addEventListener('click', () => {
-            editFormModal.classList.remove('active');
-        });
+            let csvContent = "data:text/csv;charset=utf-8,\uFEFF";
+            csvContent += "วันที่,รายการ,จำนวนเงิน\n";
 
-        function handleDeleteClick(e) {
-            const transactionId = Number(e.target.dataset.id);
-            if (confirm('ยืนยันการลบรายการนี้ใช่ไหม?')) {
-                transactions = transactions.filter(t => t.id !== transactionId);
-                saveTransactions();
-                renderTransactions();
-                updateBalance();
-            }
-        }
+            transactions.forEach(item => {
+                const formattedDate = new Date(item.date).toLocaleDateString('th-TH');
+                const descriptionText = item.description || (item.amount >= 0 ? 'รับ' : 'จ่าย');
+                const amountText = (item.amount >= 0 ? '+' : '') + item.amount.toFixed(2);
+                const escapedDescription = `"${descriptionText.replace(/"/g, '""')}"`;
+                csvContent += `${formattedDate},${escapedDescription},${amountText}\n`;
+            });
 
-        downloadButton.addEventListener('click', () => {
-            if (transactions.length === 0) {
-                alert('ยังไม่มีรายการให้ดาวน์โหลด');
-                return;
-            }
+            const encodedUri = encodeURI(csvContent);
+            const link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", `${currentUser}_transaction_data.csv`);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        });
 
-            let csvContent = "data:text/csv;charset=utf-8,\uFEFF";
-            csvContent += "วันที่,รายการ,จำนวนเงิน\n";
+        viewHistoryButton.addEventListener('click', () => navigateTo('history-screen', 'รายการย้อนหลัง'));
+        backToHomeButton.addEventListener('click', () => navigateTo('home-screen', `สวัสดี, ${currentUser}`));
+        logoutButton.addEventListener('click', () => {
+            localStorage.removeItem('currentUser');
+            currentUser = null;
+            navigateTo('login-screen');
+        });
 
-            transactions.forEach(item => {
-                const formattedDate = new Date(item.date).toLocaleDateString('th-TH');
-                const descriptionText = item.description || (item.amount >= 0 ? 'รับ' : 'จ่าย');
-                const amountText = (item.amount >= 0 ? '+' : '') + item.amount.toFixed(2);
-                const escapedDescription = `"${descriptionText.replace(/"/g, '""')}"`;
-                csvContent += `${formattedDate},${escapedDescription},${amountText}\n`;
-            });
+        // ฟังก์ชัน loadTransactions() แบบใหม่ ใช้ onSnapshot
+        function loadTransactions() {
+            if (!currentUser) {
+                transactions = [];
+                updateBalance();
+                return;
+            }
 
-            const encodedUri = encodeURI(csvContent);
-            const link = document.createElement("a");
-            link.setAttribute("href", encodedUri);
-            link.setAttribute("download", `${currentUser}_transaction_data.csv`);
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-        });
+            db.collection('users').doc(currentUser).collection('transactions')
+                .orderBy('date', 'desc')
+                .onSnapshot(querySnapshot => {
+                    transactions = [];
+                    querySnapshot.forEach(doc => {
+                        const data = doc.data();
+                        transactions.push({
+                            id: doc.id,
+                            description: data.description,
+                            amount: data.amount,
+                            date: data.date ? data.date.toDate().toISOString() : new Date().toISOString()
+                        });
+                    });
+                    updateBalance();
+                    renderTransactions();
+                }, error => {
+                    console.error("Error fetching transactions: ", error);
+                    alert('ไม่สามารถโหลดรายการได้');
+                });
+        }
 
-        viewHistoryButton.addEventListener('click', () => navigateTo('history-screen', 'รายการย้อนหลัง'));
-        backToHomeButton.addEventListener('click', () => navigateTo('home-screen', `สวัสดี, ${currentUser}`));
-        logoutButton.addEventListener('click', () => {
-            localStorage.removeItem('currentUser');
-            currentUser = null;
-            navigateTo('login-screen');
-        });
-        
-        if (currentUser) {
-            navigateTo('home-screen', `สวัสดี, ${currentUser}`);
-        } else {
-            navigateTo('login-screen');
-        }
-    </script>
+        if (currentUser) {
+            navigateTo('home-screen', `สวัสดี, ${currentUser}`);
+        } else {
+            navigateTo('login-screen');
+        }
+    </script>
 </body>
 </html>
