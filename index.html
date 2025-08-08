@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>โปรแกรมรายรับ-รายจ่าย</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;700&display=swap');
         
@@ -153,7 +154,6 @@
         .balance-card .balance-amount {
             font-size: 32px;
             font-weight: 700;
-            color: var(--income-color);
         }
         
         .input-section h3 {
@@ -201,13 +201,44 @@
             transition: background-color 0.3s ease, color 0.3s ease;
         }
         
-        #record-button {
-            background-color: var(--accent-color);
-            color: white;
+        .action-buttons {
+            display: flex;
+            gap: 10px;
         }
         
-        #record-button:hover {
-            background-color: #0056b3;
+        .action-button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-grow: 1;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 500;
+            color: white;
+            cursor: pointer;
+            border: none;
+            transition: background-color 0.3s ease;
+        }
+
+        .action-button .material-icons {
+            margin-right: 8px;
+        }
+
+        .action-button.income {
+            background-color: var(--income-color);
+        }
+        
+        .action-button.expense {
+            background-color: var(--expense-color);
+        }
+
+        .action-button.income:hover {
+            background-color: #266a2a;
+        }
+        
+        .action-button.expense:hover {
+            background-color: #a42121;
         }
         
         .history-section {
@@ -300,7 +331,6 @@
             cursor: pointer;
         }
         
-        /* New styles for the footer buttons */
         .history-footer {
             margin-top: auto;
             padding-top: 20px;
@@ -356,7 +386,6 @@
             justify-content: flex-end;
             margin-top: 10px;
         }
-
     </style>
 </head>
 <body>
@@ -408,10 +437,18 @@
                 <form id="entry-form">
                     <input type="text" id="description" placeholder="รายการ (ถ้ามี)">
                     <div class="button-group">
-                        <input type="number" id="income-amount" placeholder="เงินรับ">
-                        <input type="number" id="expense-amount" placeholder="เงินจ่าย">
+                        <input type="number" id="amount-input" placeholder="จำนวนเงิน" required>
                     </div>
-                    <button type="submit" id="record-button">บันทึก</button>
+                    <div class="action-buttons">
+                        <button type="button" class="action-button income" id="record-income-button">
+                            <span class="material-icons">add</span>
+                            บันทึกรายรับ
+                        </button>
+                        <button type="button" class="action-button expense" id="record-expense-button">
+                            <span class="material-icons">remove</span>
+                            บันทึกรายจ่าย
+                        </button>
+                    </div>
                 </form>
             </div>
             
@@ -480,8 +517,10 @@
 
         const entryForm = document.getElementById('entry-form');
         const descriptionInput = document.getElementById('description');
-        const incomeAmountInput = document.getElementById('income-amount');
-        const expenseAmountInput = document.getElementById('expense-amount');
+        const amountInput = document.getElementById('amount-input');
+        const recordIncomeButton = document.getElementById('record-income-button');
+        const recordExpenseButton = document.getElementById('record-expense-button');
+
         const currentBalanceSpan = document.getElementById('current-balance');
         const transactionListUl = document.getElementById('transaction-list-ul');
         const viewHistoryButton = document.getElementById('view-history-button');
@@ -671,36 +710,44 @@
             alert('กรุณาเข้าสู่ระบบด้วยชื่อผู้ใช้ "admin" เพื่อเข้าสู่หน้าผู้ดูแล');
         });
 
-        entryForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            const incomeAmount = parseFloat(incomeAmountInput.value);
-            const expenseAmount = parseFloat(expenseAmountInput.value);
-            let amount = 0;
-
-            if (incomeAmount > 0) {
-                amount = incomeAmount;
-            } else if (expenseAmount > 0) {
-                amount = -expenseAmount;
-            } else {
-                alert('กรุณากรอกจำนวนเงินรับหรือจ่าย');
+        // Event listener for recording income
+        recordIncomeButton.addEventListener('click', () => {
+            const amount = parseFloat(amountInput.value);
+            if (isNaN(amount) || amount <= 0) {
+                alert('กรุณากรอกจำนวนเงินรับที่ถูกต้อง');
                 return;
             }
-
             const newTransaction = {
                 id: Date.now(),
-                description: descriptionInput.value,
+                description: descriptionInput.value || 'เงินรับ',
                 amount: amount,
                 date: new Date().toISOString()
             };
-
             transactions.unshift(newTransaction);
             saveTransactions();
-            
             updateBalance();
-
             descriptionInput.value = '';
-            incomeAmountInput.value = '';
-            expenseAmountInput.value = '';
+            amountInput.value = '';
+        });
+        
+        // Event listener for recording expense
+        recordExpenseButton.addEventListener('click', () => {
+            const amount = parseFloat(amountInput.value);
+            if (isNaN(amount) || amount <= 0) {
+                alert('กรุณากรอกจำนวนเงินจ่ายที่ถูกต้อง');
+                return;
+            }
+            const newTransaction = {
+                id: Date.now(),
+                description: descriptionInput.value || 'เงินจ่าย',
+                amount: -amount,
+                date: new Date().toISOString()
+            };
+            transactions.unshift(newTransaction);
+            saveTransactions();
+            updateBalance();
+            descriptionInput.value = '';
+            amountInput.value = '';
         });
 
         function handleEditClick(e) {
